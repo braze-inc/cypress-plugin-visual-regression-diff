@@ -11,7 +11,11 @@ declare global {
       remoteScreenshotServiceUrl?: string;
       diffConfig?: Parameters<typeof pixelmatch>[5];
       updateImages?: boolean;
+      /**
+       * @deprecated since version 3.0, use imagesPath instead
+       */
       imagesDir?: string;
+      imagesPath?: string;
       maxDiffThreshold?: number;
       title?: string;
     };
@@ -27,8 +31,6 @@ declare global {
   }
 }
 
-const nameCacheCounter: Record<string, number> = {};
-
 const constructCypressError = (log: Cypress.Log, err: Error) => {
   // only way to throw & log the message properly in Cypress
   // https://github.com/cypress-io/cypress/blob/5f94cad3cb4126e0567290b957050c33e3a78e3c/packages/driver/src/cypress/error_utils.ts#L214-L216
@@ -37,61 +39,78 @@ const constructCypressError = (log: Cypress.Log, err: Error) => {
   return err;
 };
 
-export const getConfig = (options: Cypress.MatchImageOptions) => ({
-  scaleFactor:
-    Cypress.env("pluginVisualRegressionForceDeviceScaleFactor") === false
-      ? 1
-      : 1 / window.devicePixelRatio,
-  updateImages:
-    options.updateImages ||
-    (Cypress.env("pluginVisualRegressionUpdateImages") as
-      | boolean
-      | undefined) ||
-    false,
-  imagesDir:
+const getImagesDir = (options: Cypress.MatchImageOptions) => {
+  const imagesDir =
     options.imagesDir ||
-    (Cypress.env("pluginVisualRegressionImagesDir") as string | undefined) ||
-    "__image_snapshots__",
-  maxDiffThreshold:
-    options.maxDiffThreshold ||
-    (Cypress.env("pluginVisualRegressionMaxDiffThreshold") as
-      | number
-      | undefined) ||
-    0.01,
-  diffConfig:
-    options.diffConfig ||
-    (Cypress.env("pluginVisualRegressionDiffConfig") as
-      | Parameters<typeof pixelmatch>[5]
-      | undefined) ||
-    {},
-  screenshotConfig:
-    options.screenshotConfig ||
-    (Cypress.env("pluginVisualRegressionScreenshotConfig") as
-      | Partial<Cypress.ScreenshotDefaultsOptions>
-      | undefined) ||
-    {},
-  remoteScreenshotServiceUrl:
-    options.remoteScreenshotServiceUrl ||
-    (Cypress.env("pluginVisualRegressionRemoteScreenshotServiceUrl") as
-      | string
-      | undefined) ||
-    {},
-});
+    (Cypress.env("pluginVisualRegressionImagesDir") as string | undefined);
+
+  // TODO: remove in 4.0.0
+  if (imagesDir) {
+    console.warn(
+      "@frsource/cypress-plugin-visual-regression-diff] `imagesDir` option is deprecated, use `imagesPath` instead (https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff#configuration)"
+    );
+  }
+
+  return imagesDir;
+};
+
+export const getConfig = (options: Cypress.MatchImageOptions) => {
+  const imagesDir = getImagesDir(options);
+
+  return {
+    scaleFactor:
+      Cypress.env("pluginVisualRegressionForceDeviceScaleFactor") === false
+        ? 1
+        : 1 / window.devicePixelRatio,
+    updateImages:
+      options.updateImages ||
+      (Cypress.env("pluginVisualRegressionUpdateImages") as
+        | boolean
+        | undefined) ||
+      false,
+    imagesPath:
+      (imagesDir && `{spec_path}/${imagesDir}`) ||
+      options.imagesPath ||
+      (Cypress.env("pluginVisualRegressionImagesPath") as string | undefined) ||
+      "{spec_path}/__image_snapshots__",
+    maxDiffThreshold:
+      options.maxDiffThreshold ||
+      (Cypress.env("pluginVisualRegressionMaxDiffThreshold") as
+        | number
+        | undefined) ||
+      0.01,
+    diffConfig:
+      options.diffConfig ||
+      (Cypress.env("pluginVisualRegressionDiffConfig") as
+        | Parameters<typeof pixelmatch>[5]
+        | undefined) ||
+      {},
+    screenshotConfig:
+      options.screenshotConfig ||
+      (Cypress.env("pluginVisualRegressionScreenshotConfig") as
+        | Partial<Cypress.ScreenshotDefaultsOptions>
+        | undefined) ||
+      {},
+    remoteScreenshotServiceUrl:
+      options.remoteScreenshotServiceUrl ||
+      (Cypress.env("pluginVisualRegressionRemoteScreenshotServiceUrl") as
+        | string
+        | undefined) ||
+      {},
+  };
+};
 
 Cypress.Commands.add(
   "matchImage",
   { prevSubject: "optional" },
   (subject, options = {}) => {
     const $el = subject as JQuery<HTMLElement> | undefined;
-    let title = options.title || Cypress.currentTest.titlePath.join(" ");
-    if (typeof nameCacheCounter[title] === "undefined")
-      nameCacheCounter[title] = -1;
-    title += ` #${++nameCacheCounter[title]}`;
+    let title: string;
 
     const {
       scaleFactor,
       updateImages,
-      imagesDir,
+      imagesPath,
       maxDiffThreshold,
       diffConfig,
       screenshotConfig,
@@ -100,17 +119,20 @@ Cypress.Commands.add(
 
     return cy
       .then(() =>
-        cy.task(
-          TASK.getScreenshotPath,
+        cy.task<{ screenshotPath: string; title: string }>(
+          TASK.getScreenshotPathInfo,
           {
-            title,
-            imagesDir,
+            titleFromOptions:
+              options.title || Cypress.currentTest.titlePath.join(" "),
+            imagesPath,
             specPath: Cypress.spec.relative,
           },
           { log: false }
         )
       )
-      .then((screenshotPath) => {
+      .then(({ screenshotPath, title: titleFromTask }) => {
+        title = titleFromTask;
+
         if (remoteScreenshotServiceUrl) {
           return cy
             .request({
@@ -128,7 +150,7 @@ Cypress.Commands.add(
         } else {
           let imgPath: string;
           return ($el ? cy.wrap($el) : cy)
-            .screenshot(screenshotPath as string, {
+            .screenshot(screenshotPath, {
               ...screenshotConfig,
               onAfterScreenshot(el, props) {
                 imgPath = props.path;
