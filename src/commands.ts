@@ -8,6 +8,7 @@ declare global {
   namespace Cypress {
     type MatchImageOptions = {
       screenshotConfig?: Partial<Cypress.ScreenshotDefaultsOptions>;
+      remoteScreenshotServiceUrl?: string;
       diffConfig?: Parameters<typeof pixelmatch>[5];
       updateImages?: boolean;
       imagesDir?: string;
@@ -69,6 +70,12 @@ export const getConfig = (options: Cypress.MatchImageOptions) => ({
       | Partial<Cypress.ScreenshotDefaultsOptions>
       | undefined) ||
     {},
+  remoteScreenshotServiceUrl:
+    options.remoteScreenshotServiceUrl ||
+    (Cypress.env("pluginVisualRegressionRemoteScreenshotServiceUrl") as
+      | string
+      | undefined) ||
+    {},
 });
 
 Cypress.Commands.add(
@@ -88,6 +95,7 @@ Cypress.Commands.add(
       maxDiffThreshold,
       diffConfig,
       screenshotConfig,
+      remoteScreenshotServiceUrl,
     } = getConfig(options);
 
     return cy
@@ -103,17 +111,33 @@ Cypress.Commands.add(
         )
       )
       .then((screenshotPath) => {
-        let imgPath: string;
-        return ($el ? cy.wrap($el) : cy)
-          .screenshot(screenshotPath as string, {
-            ...screenshotConfig,
-            onAfterScreenshot(el, props) {
-              imgPath = props.path;
-              screenshotConfig.onAfterScreenshot?.(el, props);
-            },
-            log: false,
-          })
-          .then(() => imgPath);
+        if (remoteScreenshotServiceUrl) {
+          return cy
+            .request({
+              url: remoteScreenshotServiceUrl,
+              method: "POST",
+              encoding: "binary",
+              body: {
+                html: $el?.html(),
+              },
+            } as Partial<Cypress.RequestOptions>)
+            .then((response) => {
+              cy.writeFile(screenshotPath as string, response.body, "binary");
+              return screenshotPath as string;
+            });
+        } else {
+          let imgPath: string;
+          return ($el ? cy.wrap($el) : cy)
+            .screenshot(screenshotPath as string, {
+              ...screenshotConfig,
+              onAfterScreenshot(el, props) {
+                imgPath = props.path;
+                screenshotConfig.onAfterScreenshot?.(el, props);
+              },
+              log: false,
+            })
+            .then(() => imgPath);
+        }
       })
       .then((imgPath) =>
         cy
