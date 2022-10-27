@@ -43,7 +43,7 @@
     "prettify:ci": "prettier --check src",
     "prepack": "yarn build",
     "release": "semantic-release",
-    "release:ci": "yarn release --yes",
+    "release:ci": "yarn release --yes --skip-npm",
     "release:test": "yarn release --no-git-tag-version --no-push --skip-npm",
     "test": "cd example && yarn test:ct:ci && yarn test:e2e:ci && yarn test:integration:ci",
     "test:integration": "vitest run",
