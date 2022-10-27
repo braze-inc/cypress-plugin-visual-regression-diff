@@ -107,10 +107,9 @@ Cypress.Commands.add("matchImage", {
             html: html
           }
         }).then(response => {
-          cy.writeFile(screenshotPath, response.body, "binary");
-          return screenshotPath;
+          return cy.writeFile(screenshotPath, response.body, "binary");
         });
-      });
+      }).then(() => screenshotPath);
     } else {
       let imgPath;
       return ($el ? cy.wrap($el) : cy).screenshot(screenshotPath, _extends({}, screenshotConfig, {
