@@ -184,7 +184,7 @@ cy.matchImage({
   // maximum threshold above which the test should fail
   // default: 0.01
   maxDiffThreshold: 0.1,
-  // forces scale factor to be set as value "1" 
+  // forces scale factor to be set as value "1"
   // helps with screenshots being scaled 2x on high-density screens like Mac Retina
   // default: true
   forceDeviceScaleFactor: false,
@@ -195,6 +195,10 @@ cy.matchImage({
   // instead of checking against the image from previous run
   // default: undefined
   matchAgainstPath: '/path/to/reference-image.png'
+  // pass the URL of an http service that accepts POST with a body like {"html"=>"<html>hello world</html>"} and
+  // responds with screenshotted image. This can be useful for eliminating rendering differences across operating systems.
+  // default: undefined
+  remoteScreenshotServiceUrl: 'https://example.com/screenshotter/render'
 })
 ```
 
@@ -215,7 +219,7 @@ export default defineConfig({
   }
 })
 {
-  
+
 }
 ```
 
