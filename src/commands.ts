@@ -137,14 +137,13 @@ Cypress.Commands.add(
           return cy
             .document()
             .then((doc) => {
-              const html = $el?.html() || doc.body.parentElement?.innerHTML;
               return cy
                 .request({
                   url: remoteScreenshotServiceUrl,
                   method: "POST",
                   encoding: "binary",
                   body: {
-                    html: html,
+                    html: ($el?.html() || doc.body.parentElement?.innerHTML),
                   },
                 } as Cypress.RequestOptions)
                 .then((response) => {
