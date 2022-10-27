@@ -97,16 +97,21 @@ Cypress.Commands.add("matchImage", {
     title = titleFromTask;
 
     if (remoteScreenshotServiceUrl) {
-      return cy.request({
-        url: remoteScreenshotServiceUrl,
-        method: "POST",
-        encoding: "binary",
-        body: {
-          html: $el == null ? void 0 : $el.html()
-        }
-      }).then(response => {
-        cy.writeFile(screenshotPath, response.body, "binary");
-        return screenshotPath;
+      return cy.document().then(doc => {
+        var _doc$body$parentEleme;
+
+        const html = ($el == null ? void 0 : $el.html()) || ((_doc$body$parentEleme = doc.body.parentElement) == null ? void 0 : _doc$body$parentEleme.innerHTML);
+        return cy.request({
+          url: remoteScreenshotServiceUrl,
+          method: "POST",
+          encoding: "binary",
+          body: {
+            html: html
+          }
+        }).then(response => {
+          cy.writeFile(screenshotPath, response.body, "binary");
+          return screenshotPath;
+        });
       });
     } else {
       let imgPath;
