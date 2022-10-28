@@ -95,8 +95,7 @@ export const getConfig = (options: Cypress.MatchImageOptions) => {
       options.remoteScreenshotServiceUrl ||
       (Cypress.env("pluginVisualRegressionRemoteScreenshotServiceUrl") as
         | string
-        | undefined) ||
-      {},
+        | undefined),
   };
 };
 
