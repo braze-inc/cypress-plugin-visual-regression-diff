@@ -143,7 +143,7 @@ Cypress.Commands.add(
                   method: "POST",
                   encoding: "binary",
                   body: {
-                    html: ($el?.html() || doc.body.parentElement?.innerHTML),
+                    html: $el?.html() || doc.body.parentElement?.innerHTML,
                   },
                 } as Cypress.RequestOptions)
                 .then((response) => {
