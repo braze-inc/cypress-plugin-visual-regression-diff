@@ -1,5 +1,4 @@
 import * as Base64 from '@frsource/base64';
-import path from 'path';
 
 function _extends() {
   _extends = Object.assign || function (target) {
@@ -109,7 +108,7 @@ Cypress.Commands.add("matchImage", {
         }).then(response => {
           return cy.writeFile(screenshotPath, response.body, "binary").task(TASK.runAfterScreenshotHook, {
             path: screenshotPath,
-            name: path.basename(screenshotPath)
+            name: screenshotPath.split("/").pop()
           });
         });
       });

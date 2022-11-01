@@ -1,7 +1,4 @@
 var Base64 = require('@frsource/base64');
-var path = require('path');
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 function _interopNamespace(e) {
   if (e && e.__esModule) return e;
@@ -22,7 +19,6 @@ function _interopNamespace(e) {
 }
 
 var Base64__namespace = /*#__PURE__*/_interopNamespace(Base64);
-var path__default = /*#__PURE__*/_interopDefaultLegacy(path);
 
 const PLUGIN_NAME = "cp-visual-regression-diff";
 const LINK_PREFIX = `#${PLUGIN_NAME}-`;
@@ -114,7 +110,7 @@ Cypress.Commands.add("matchImage", {
         }).then(response => {
           return cy.writeFile(screenshotPath, response.body, "binary").task(TASK.runAfterScreenshotHook, {
             path: screenshotPath,
-            name: path__default["default"].basename(screenshotPath)
+            name: screenshotPath.split("/").pop()
           });
         });
       });
