@@ -1,4 +1,5 @@
 import * as Base64 from '@frsource/base64';
+import path from 'path';
 
 function _extends() {
   _extends = Object.assign || function (target) {
@@ -33,7 +34,8 @@ const TASK = {
   compareImages: `${PLUGIN_NAME}-compareImages`,
   approveImage: `${PLUGIN_NAME}-approveImage`,
   cleanupImages: `${PLUGIN_NAME}-cleanupImages`,
-  doesFileExist: `${PLUGIN_NAME}-doesFileExist`
+  doesFileExist: `${PLUGIN_NAME}-doesFileExist`,
+  runAfterScreenshotHook: `${PLUGIN_NAME}-runAfterScreenshotHook`
   /* c8 ignore next */
 
 };
@@ -86,8 +88,6 @@ Cypress.Commands.add("matchImage", {
     titleFromOptions: options.title || Cypress.currentTest.titlePath.join(" "),
     imagesPath,
     specPath: Cypress.spec.relative
-  }, {
-    log: false
   })).then(({
     screenshotPath,
     title: titleFromTask
@@ -107,9 +107,12 @@ Cypress.Commands.add("matchImage", {
             html: ($el == null ? void 0 : $el.html()) || ((_doc$body$parentEleme = doc.body.parentElement) == null ? void 0 : _doc$body$parentEleme.innerHTML)
           }
         }).then(response => {
-          return cy.writeFile(imagesPath, response.body, "binary");
+          return cy.writeFile(screenshotPath, response.body, "binary").task(TASK.runAfterScreenshotHook, {
+            path: screenshotPath,
+            name: path.basename(screenshotPath)
+          });
         });
-      }).then(() => imagesPath);
+      });
     } else {
       let imgPath;
       return ($el ? cy.wrap($el) : cy).screenshot(screenshotPath, _extends({}, screenshotConfig, {
@@ -128,8 +131,6 @@ Cypress.Commands.add("matchImage", {
     updateImages,
     maxDiffThreshold,
     diffConfig
-  }, {
-    log: false
   }).then(res => ({
     res,
     imgPath

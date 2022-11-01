@@ -1,4 +1,7 @@
 var Base64 = require('@frsource/base64');
+var path = require('path');
+
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 function _interopNamespace(e) {
   if (e && e.__esModule) return e;
@@ -19,6 +22,7 @@ function _interopNamespace(e) {
 }
 
 var Base64__namespace = /*#__PURE__*/_interopNamespace(Base64);
+var path__default = /*#__PURE__*/_interopDefaultLegacy(path);
 
 const PLUGIN_NAME = "cp-visual-regression-diff";
 const LINK_PREFIX = `#${PLUGIN_NAME}-`;
@@ -35,7 +39,8 @@ const TASK = {
   compareImages: `${PLUGIN_NAME}-compareImages`,
   approveImage: `${PLUGIN_NAME}-approveImage`,
   cleanupImages: `${PLUGIN_NAME}-cleanupImages`,
-  doesFileExist: `${PLUGIN_NAME}-doesFileExist`
+  doesFileExist: `${PLUGIN_NAME}-doesFileExist`,
+  runAfterScreenshotHook: `${PLUGIN_NAME}-runAfterScreenshotHook`
   /* c8 ignore next */
 
 };
@@ -88,8 +93,6 @@ Cypress.Commands.add("matchImage", {
     titleFromOptions: options.title || Cypress.currentTest.titlePath.join(" "),
     imagesPath,
     specPath: Cypress.spec.relative
-  }, {
-    log: false
   })).then(({
     screenshotPath,
     title: titleFromTask
@@ -109,9 +112,12 @@ Cypress.Commands.add("matchImage", {
             html: ($el == null ? void 0 : $el.html()) || ((_doc$body$parentEleme = doc.body.parentElement) == null ? void 0 : _doc$body$parentEleme.innerHTML)
           }
         }).then(response => {
-          return cy.writeFile(imagesPath, response.body, "binary");
+          return cy.writeFile(screenshotPath, response.body, "binary").task(TASK.runAfterScreenshotHook, {
+            path: screenshotPath,
+            name: path__default["default"].basename(screenshotPath)
+          });
         });
-      }).then(() => imagesPath);
+      });
     } else {
       let imgPath;
       return ($el ? cy.wrap($el) : cy).screenshot(screenshotPath, { ...screenshotConfig,
@@ -131,8 +137,6 @@ Cypress.Commands.add("matchImage", {
     updateImages,
     maxDiffThreshold,
     diffConfig
-  }, {
-    log: false
   }).then(res => ({
     res,
     imgPath
