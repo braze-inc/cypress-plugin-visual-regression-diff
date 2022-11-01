@@ -16,6 +16,7 @@ import {
   resetScreenshotNameCache,
 } from "./screenshotPath.utils";
 import type { CompareImagesTaskReturn } from "./types";
+import { initAfterScreenshotHook } from "./afterScreenshot.hook";
 
 export type CompareImagesCfg = {
   scaleFactor: number;
@@ -189,5 +190,6 @@ export const initTaskHook = (config: Cypress.PluginConfigOptions) => ({
   [TASK.doesFileExist]: doesFileExistTask,
   [TASK.approveImage]: approveImageTask,
   [TASK.compareImages]: compareImagesTask,
+  [TASK.runAfterScreenshotHook]: initAfterScreenshotHook(config),
 });
 /* c8 ignore stop */

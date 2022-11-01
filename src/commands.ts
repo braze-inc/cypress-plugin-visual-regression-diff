@@ -1,8 +1,9 @@
+import path from "path";
 import { FILE_SUFFIX, LINK_PREFIX, TASK } from "./constants";
 import type pixelmatch from "pixelmatch";
 import * as Base64 from "@frsource/base64";
 import type { CompareImagesTaskReturn } from "./types";
-import { parseAbsolutePath } from "./afterScreenshot.hook";
+import { initAfterScreenshotHook } from "./afterScreenshot.hook";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -126,8 +127,7 @@ Cypress.Commands.add(
               options.title || Cypress.currentTest.titlePath.join(" "),
             imagesPath,
             specPath: Cypress.spec.relative,
-          },
-          { log: false }
+          }
         )
       )
       .then(({ screenshotPath, title: titleFromTask }) => {
@@ -137,27 +137,25 @@ Cypress.Commands.add(
           cy.log(
             `remoteScreenshotServiceUrl ${remoteScreenshotServiceUrl}. imagesPath ${imagesPath}. screenshotPath ${screenshotPath}`
           );
-          return cy
-            .document()
-            .then((doc) => {
-              return cy
-                .request({
-                  url: remoteScreenshotServiceUrl,
-                  method: "POST",
-                  encoding: "binary",
-                  body: {
-                    html: $el?.html() || doc.body.parentElement?.innerHTML,
-                  },
-                } as Cypress.RequestOptions)
-                .then((response) => {
-                  return cy.writeFile(
-                    imagesPath as string,
-                    response.body,
-                    "binary"
-                  );
-                });
-            })
-            .then(() => imagesPath as string);
+          return cy.document().then((doc) => {
+            return cy
+              .request({
+                url: remoteScreenshotServiceUrl,
+                method: "POST",
+                encoding: "binary",
+                body: {
+                  html: $el?.html() || doc.body.parentElement?.innerHTML,
+                },
+              } as Cypress.RequestOptions)
+              .then((response) => {
+                return cy
+                  .writeFile(screenshotPath as string, response.body, "binary")
+                  .task<string>(TASK.runAfterScreenshotHook, {
+                    path: screenshotPath,
+                    name: path.basename(screenshotPath),
+                  });
+              });
+          });
         } else {
           let imgPath: string;
           return ($el ? cy.wrap($el) : cy)
@@ -174,18 +172,14 @@ Cypress.Commands.add(
       })
       .then((imgPath) =>
         cy
-          .task<CompareImagesTaskReturn>(
-            TASK.compareImages,
-            {
-              scaleFactor,
-              imgNew: imgPath,
-              imgOld: imgPath.replace(FILE_SUFFIX.actual, ""),
-              updateImages,
-              maxDiffThreshold,
-              diffConfig,
-            },
-            { log: false }
-          )
+          .task<CompareImagesTaskReturn>(TASK.compareImages, {
+            scaleFactor,
+            imgNew: imgPath,
+            imgOld: imgPath.replace(FILE_SUFFIX.actual, ""),
+            updateImages,
+            maxDiffThreshold,
+            diffConfig,
+          })
           .then((res) => ({
             res,
             imgPath,
