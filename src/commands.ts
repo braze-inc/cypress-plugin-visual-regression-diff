@@ -1,9 +1,7 @@
-import path from "path";
 import { FILE_SUFFIX, LINK_PREFIX, TASK } from "./constants";
 import type pixelmatch from "pixelmatch";
 import * as Base64 from "@frsource/base64";
 import type { CompareImagesTaskReturn } from "./types";
-import { initAfterScreenshotHook } from "./afterScreenshot.hook";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -152,7 +150,7 @@ Cypress.Commands.add(
                   .writeFile(screenshotPath as string, response.body, "binary")
                   .task<string>(TASK.runAfterScreenshotHook, {
                     path: screenshotPath,
-                    name: path.basename(screenshotPath),
+                    name: screenshotPath.split("/").pop(),
                   });
               });
           });
