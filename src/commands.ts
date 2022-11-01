@@ -2,6 +2,7 @@ import { FILE_SUFFIX, LINK_PREFIX, TASK } from "./constants";
 import type pixelmatch from "pixelmatch";
 import * as Base64 from "@frsource/base64";
 import type { CompareImagesTaskReturn } from "./types";
+import { parseAbsolutePath } from "./afterScreenshot.hook";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -133,6 +134,9 @@ Cypress.Commands.add(
         title = titleFromTask;
 
         if (remoteScreenshotServiceUrl) {
+          cy.log(
+            `remoteScreenshotServiceUrl ${remoteScreenshotServiceUrl}. imagesPath ${imagesPath}. screenshotPath ${screenshotPath}`
+          );
           return cy
             .document()
             .then((doc) => {
@@ -147,13 +151,13 @@ Cypress.Commands.add(
                 } as Cypress.RequestOptions)
                 .then((response) => {
                   return cy.writeFile(
-                    screenshotPath as string,
+                    imagesPath as string,
                     response.body,
                     "binary"
                   );
                 });
             })
-            .then(() => screenshotPath as string);
+            .then(() => imagesPath as string);
         } else {
           let imgPath: string;
           return ($el ? cy.wrap($el) : cy)
