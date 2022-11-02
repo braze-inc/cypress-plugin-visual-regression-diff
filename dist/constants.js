@@ -14,7 +14,8 @@ const TASK = {
   compareImages: `${PLUGIN_NAME}-compareImages`,
   approveImage: `${PLUGIN_NAME}-approveImage`,
   cleanupImages: `${PLUGIN_NAME}-cleanupImages`,
-  doesFileExist: `${PLUGIN_NAME}-doesFileExist`
+  doesFileExist: `${PLUGIN_NAME}-doesFileExist`,
+  runAfterScreenshotHook: `${PLUGIN_NAME}-runAfterScreenshotHook`
   /* c8 ignore next */
 
 };

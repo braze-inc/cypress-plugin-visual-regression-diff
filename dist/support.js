@@ -35,7 +35,8 @@ const TASK = {
   compareImages: `${PLUGIN_NAME}-compareImages`,
   approveImage: `${PLUGIN_NAME}-approveImage`,
   cleanupImages: `${PLUGIN_NAME}-cleanupImages`,
-  doesFileExist: `${PLUGIN_NAME}-doesFileExist`
+  doesFileExist: `${PLUGIN_NAME}-doesFileExist`,
+  runAfterScreenshotHook: `${PLUGIN_NAME}-runAfterScreenshotHook`
   /* c8 ignore next */
 
 };
@@ -87,7 +88,10 @@ Cypress.Commands.add("matchImage", {
   return cy.then(() => cy.task(TASK.getScreenshotPathInfo, {
     titleFromOptions: options.title || Cypress.currentTest.titlePath.join(" "),
     imagesPath,
-    specPath: Cypress.spec.relative
+    specPath: Cypress.spec.relative,
+    // Although cy.state is not on cypress.d.ts it is documented publically at
+    // https://docs.cypress.io/guides/guides/test-retries#Can-I-access-the-current-attempt-counter-from-the-test
+    attemptNumber: cy.state("runnable")._currentRetry
   }, {
     log: false
   })).then(({
@@ -108,9 +112,14 @@ Cypress.Commands.add("matchImage", {
             html: ($el == null ? void 0 : $el.html()) || ((_doc$body$parentEleme = doc.body.parentElement) == null ? void 0 : _doc$body$parentEleme.innerHTML)
           }
         }).then(response => {
-          return cy.writeFile(screenshotPath, response.body, "binary");
-        });
-      }).then(() => screenshotPath);
+          return cy.writeFile(screenshotPath, response.body, "binary").task(TASK.runAfterScreenshotHook, {
+            path: screenshotPath,
+            name: screenshotPath
+          });
+        }).then(({
+          path
+        }) => path);
+      });
     } else {
       let imgPath;
       return ($el ? cy.wrap($el) : cy).screenshot(screenshotPath, { ...screenshotConfig,
