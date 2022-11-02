@@ -128,11 +128,10 @@ Cypress.Commands.add(
             // Although cy.state is not on cypress.d.ts it is documented publically at
             // https://docs.cypress.io/guides/guides/test-retries#Can-I-access-the-current-attempt-counter-from-the-test
             attemptNumber: Cypress._.get(
-              (
-                cy as unknown as {
-                  state: (state: string) => { _currentRetry: number };
-                }
-              ).state("runnable")._currentRetry,
+              (cy as unknown as { state: (state: string) => unknown }).state(
+                "runnable"
+              ),
+              "_currentRetry",
               0
             ),
           },
