@@ -89,7 +89,7 @@ Cypress.Commands.add("matchImage", {
     specPath: Cypress.spec.relative,
     // Although cy.state is not on cypress.d.ts it is documented publically at
     // https://docs.cypress.io/guides/guides/test-retries#Can-I-access-the-current-attempt-counter-from-the-test
-    attemptNumber: cy.state("runnable")._currentRetry
+    attemptNumber: Cypress._.get(cy.state("runnable")._currentRetry, 0)
   }, {
     log: false
   })).then(({
