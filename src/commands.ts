@@ -133,27 +133,26 @@ Cypress.Commands.add(
         title = titleFromTask;
 
         if (remoteScreenshotServiceUrl) {
-          return cy
-            .document()
-            .then((doc) => {
-              return cy
-                .request({
-                  url: remoteScreenshotServiceUrl,
-                  method: "POST",
-                  encoding: "binary",
-                  body: {
-                    html: $el?.html() || doc.body.parentElement?.innerHTML,
-                  },
-                } as Cypress.RequestOptions)
-                .then((response) => {
-                  return cy.writeFile(
-                    screenshotPath as string,
-                    response.body,
-                    "binary"
-                  );
-                });
-            })
-            .then(() => screenshotPath as string);
+          return cy.document().then((doc) => {
+            return cy
+              .request({
+                url: remoteScreenshotServiceUrl,
+                method: "POST",
+                encoding: "binary",
+                body: {
+                  html: $el?.html() || doc.body.parentElement?.innerHTML,
+                },
+              } as Cypress.RequestOptions)
+              .then((response) => {
+                return cy
+                  .writeFile(screenshotPath as string, response.body, "binary")
+                  .task<{ path: string }>(TASK.runAfterScreenshotHook, {
+                    path: screenshotPath,
+                    name: screenshotPath,
+                  });
+              })
+              .then(({ path }) => path);
+          });
         } else {
           let imgPath: string;
           return ($el ? cy.wrap($el) : cy)

@@ -14,6 +14,7 @@ export const TASK = {
   approveImage: `${PLUGIN_NAME}-approveImage`,
   cleanupImages: `${PLUGIN_NAME}-cleanupImages`,
   doesFileExist: `${PLUGIN_NAME}-doesFileExist`,
+  runAfterScreenshotHook: `${PLUGIN_NAME}-runAfterScreenshotHook`,
   /* c8 ignore next */
 };
 
