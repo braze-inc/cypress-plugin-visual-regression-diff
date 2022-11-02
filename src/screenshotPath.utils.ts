@@ -13,10 +13,12 @@ export const generateScreenshotPath = ({
   titleFromOptions,
   imagesPath,
   specPath,
+  attempt,
 }: {
   titleFromOptions: string;
   imagesPath: string;
   specPath: string;
+  attempt: number;
 }) => {
   const parsePathPartVariables = (pathPart: string, i: number) => {
     if (pathPart === PATH_VARIABLES.specPath) {
@@ -39,7 +41,10 @@ export const generateScreenshotPath = ({
 
   if (typeof nameCacheCounter[screenshotPath] === "undefined") {
     nameCacheCounter[screenshotPath] = -1;
+  } else if (attempt > 0) {
+    nameCacheCounter[screenshotPath] -= 1;
   }
+
   return path.join(
     IMAGE_SNAPSHOT_PREFIX,
     `${screenshotPath} #${++nameCacheCounter[screenshotPath]}${

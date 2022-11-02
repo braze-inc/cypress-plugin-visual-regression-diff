@@ -125,6 +125,15 @@ Cypress.Commands.add(
               options.title || Cypress.currentTest.titlePath.join(" "),
             imagesPath,
             specPath: Cypress.spec.relative,
+            // Although cy.state is not on cypress.d.ts it is documented publically at
+            // https://docs.cypress.io/guides/guides/test-retries#Can-I-access-the-current-attempt-counter-from-the-test
+            attempt: Cypress._.get(
+              (cy as unknown as { state: (state: string) => unknown }).state(
+                "runnable"
+              ),
+              "_currentRetry",
+              0
+            ),
           },
           { log: false }
         )

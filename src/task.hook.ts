@@ -39,6 +39,7 @@ export const getScreenshotPathInfoTask = (cfg: {
   titleFromOptions: string;
   imagesPath: string;
   specPath: string;
+  attempt: number;
 }) => {
   const screenshotPath = generateScreenshotPath(cfg);
 
