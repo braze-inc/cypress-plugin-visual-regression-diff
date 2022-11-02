@@ -125,16 +125,14 @@ Cypress.Commands.add(
               options.title || Cypress.currentTest.titlePath.join(" "),
             imagesPath,
             specPath: Cypress.spec.relative,
-          }
+          },
+          { log: false }
         )
       )
       .then(({ screenshotPath, title: titleFromTask }) => {
         title = titleFromTask;
 
         if (remoteScreenshotServiceUrl) {
-          cy.log(
-            `remoteScreenshotServiceUrl ${remoteScreenshotServiceUrl}. imagesPath ${imagesPath}. screenshotPath ${screenshotPath}`
-          );
           return cy.document().then((doc) => {
             return cy
               .request({
@@ -171,14 +169,18 @@ Cypress.Commands.add(
       })
       .then((imgPath) =>
         cy
-          .task<CompareImagesTaskReturn>(TASK.compareImages, {
-            scaleFactor,
-            imgNew: imgPath,
-            imgOld: imgPath.replace(FILE_SUFFIX.actual, ""),
-            updateImages,
-            maxDiffThreshold,
-            diffConfig,
-          })
+          .task<CompareImagesTaskReturn>(
+            TASK.compareImages,
+            {
+              scaleFactor,
+              imgNew: imgPath,
+              imgOld: imgPath.replace(FILE_SUFFIX.actual, ""),
+              updateImages,
+              maxDiffThreshold,
+              diffConfig,
+            },
+            { log: false }
+          )
           .then((res) => ({
             res,
             imgPath,
