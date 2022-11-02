@@ -148,11 +148,12 @@ Cypress.Commands.add(
               .then((response) => {
                 return cy
                   .writeFile(screenshotPath as string, response.body, "binary")
-                  .task<string>(TASK.runAfterScreenshotHook, {
+                  .task<{ path: string }>(TASK.runAfterScreenshotHook, {
                     path: screenshotPath,
                     name: screenshotPath,
                   });
-              });
+              })
+              .then(({ path }) => path);
           });
         } else {
           let imgPath: string;

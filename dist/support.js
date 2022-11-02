@@ -112,7 +112,9 @@ Cypress.Commands.add("matchImage", {
             path: screenshotPath,
             name: screenshotPath
           });
-        });
+        }).then(({
+          path
+        }) => path);
       });
     } else {
       let imgPath;
