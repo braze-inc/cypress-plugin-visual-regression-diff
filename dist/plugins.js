@@ -153,7 +153,7 @@ const generateScreenshotPath = ({
   titleFromOptions,
   imagesPath,
   specPath,
-  attemptNumber = 0
+  attemptNumber = 1
 }) => {
   const parsePathPartVariables = (pathPart, i) => {
     if (pathPart === PATH_VARIABLES.specPath) {
@@ -175,7 +175,7 @@ const generateScreenshotPath = ({
     nameCacheCounter[screenshotPath] = -1;
   }
 
-  nameCacheCounter[screenshotPath] -= attemptNumber;
+  nameCacheCounter[screenshotPath] -= attemptNumber - 1;
   return path__default["default"].join(IMAGE_SNAPSHOT_PREFIX, `${screenshotPath} #${++nameCacheCounter[screenshotPath]}${FILE_SUFFIX.actual}.png`);
 };
 const screenshotPathRegex = new RegExp(`^([\\s\\S]+?) #([0-9]+)(?:(?:\\${FILE_SUFFIX.diff})|(?:\\${FILE_SUFFIX.actual}))?\\.(?:png|PNG)$`);

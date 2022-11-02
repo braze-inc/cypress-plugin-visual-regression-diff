@@ -13,7 +13,7 @@ export const generateScreenshotPath = ({
   titleFromOptions,
   imagesPath,
   specPath,
-  attemptNumber = 0,
+  attemptNumber = 1,
 }: {
   titleFromOptions: string;
   imagesPath: string;
@@ -42,7 +42,7 @@ export const generateScreenshotPath = ({
   if (typeof nameCacheCounter[screenshotPath] === "undefined") {
     nameCacheCounter[screenshotPath] = -1;
   }
-  nameCacheCounter[screenshotPath] -= attemptNumber;
+  nameCacheCounter[screenshotPath] -= attemptNumber - 1;
 
   return path.join(
     IMAGE_SNAPSHOT_PREFIX,
