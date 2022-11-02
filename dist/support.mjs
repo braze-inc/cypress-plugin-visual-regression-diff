@@ -108,7 +108,7 @@ Cypress.Commands.add("matchImage", {
         }).then(response => {
           return cy.writeFile(screenshotPath, response.body, "binary").task(TASK.runAfterScreenshotHook, {
             path: screenshotPath,
-            name: screenshotPath.split("/").pop()
+            name: screenshotPath
           });
         });
       });

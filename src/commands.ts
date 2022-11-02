@@ -150,7 +150,7 @@ Cypress.Commands.add(
                   .writeFile(screenshotPath as string, response.body, "binary")
                   .task<string>(TASK.runAfterScreenshotHook, {
                     path: screenshotPath,
-                    name: screenshotPath.split("/").pop(),
+                    name: screenshotPath,
                   });
               });
           });
