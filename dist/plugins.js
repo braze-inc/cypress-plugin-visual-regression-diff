@@ -172,9 +172,10 @@ const generateScreenshotPath = ({
   const screenshotPath = path__default["default"].join(...imagesPath.split("/").map(parsePathPartVariables), sanitizeFilename(titleFromOptions));
 
   if (typeof nameCacheCounter[screenshotPath] === "undefined") {
-    nameCacheCounter[screenshotPath] = attemptNumber - 1;
+    nameCacheCounter[screenshotPath] = -1;
   }
 
+  nameCacheCounter[screenshotPath] -= attemptNumber;
   return path__default["default"].join(IMAGE_SNAPSHOT_PREFIX, `${screenshotPath} #${++nameCacheCounter[screenshotPath]}${FILE_SUFFIX.actual}.png`);
 };
 const screenshotPathRegex = new RegExp(`^([\\s\\S]+?) #([0-9]+)(?:(?:\\${FILE_SUFFIX.diff})|(?:\\${FILE_SUFFIX.actual}))?\\.(?:png|PNG)$`);

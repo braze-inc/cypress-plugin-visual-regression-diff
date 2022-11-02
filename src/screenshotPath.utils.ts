@@ -40,8 +40,10 @@ export const generateScreenshotPath = ({
   );
 
   if (typeof nameCacheCounter[screenshotPath] === "undefined") {
-    nameCacheCounter[screenshotPath] = attemptNumber - 1;
+    nameCacheCounter[screenshotPath] = -1;
   }
+  nameCacheCounter[screenshotPath] -= attemptNumber;
+
   return path.join(
     IMAGE_SNAPSHOT_PREFIX,
     `${screenshotPath} #${++nameCacheCounter[screenshotPath]}${
