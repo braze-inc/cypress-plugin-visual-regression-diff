@@ -167,7 +167,7 @@ const generateScreenshotPath = ({
   } // it's a retry of the same image, so let's decrease the counter
 
 
-  if (currentRetryNumber > 0) {
+  if (currentRetryNumber > 0 && nameCacheCounter[screenshotPath] > -1) {
     --nameCacheCounter[screenshotPath];
   }
 
