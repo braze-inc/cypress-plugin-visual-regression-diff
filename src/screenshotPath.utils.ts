@@ -13,12 +13,12 @@ export const generateScreenshotPath = ({
   titleFromOptions,
   imagesPath,
   specPath,
-  attempt,
+  currentRetryNumber,
 }: {
   titleFromOptions: string;
   imagesPath: string;
   specPath: string;
-  attempt: number;
+  currentRetryNumber: number;
 }) => {
   const parsePathPartVariables = (pathPart: string, i: number) => {
     if (pathPart === PATH_VARIABLES.specPath) {
@@ -41,10 +41,12 @@ export const generateScreenshotPath = ({
 
   if (typeof nameCacheCounter[screenshotPath] === "undefined") {
     nameCacheCounter[screenshotPath] = -1;
-  } else if (attempt > 0) {
-    nameCacheCounter[screenshotPath] -= 1;
   }
 
+  // it's a retry of the same image, so let's decrease the counter
+  if (currentRetryNumber > 0 && nameCacheCounter[screenshotPath] > -1) {
+    --nameCacheCounter[screenshotPath];
+  }
   return path.join(
     IMAGE_SNAPSHOT_PREFIX,
     `${screenshotPath} #${++nameCacheCounter[screenshotPath]}${

@@ -68,7 +68,8 @@ const getConfig = options => {
     maxDiffThreshold: options.maxDiffThreshold || Cypress.env("pluginVisualRegressionMaxDiffThreshold") || 0.01,
     diffConfig: options.diffConfig || Cypress.env("pluginVisualRegressionDiffConfig") || {},
     screenshotConfig: options.screenshotConfig || Cypress.env("pluginVisualRegressionScreenshotConfig") || {},
-    remoteScreenshotServiceUrl: options.remoteScreenshotServiceUrl || Cypress.env("pluginVisualRegressionRemoteScreenshotServiceUrl")
+    remoteScreenshotServiceUrl: options.remoteScreenshotServiceUrl || Cypress.env("pluginVisualRegressionRemoteScreenshotServiceUrl"),
+    matchAgainstPath: options.matchAgainstPath || undefined
   };
 };
 Cypress.Commands.add("matchImage", {
@@ -83,12 +84,15 @@ Cypress.Commands.add("matchImage", {
     maxDiffThreshold,
     diffConfig,
     screenshotConfig,
-    remoteScreenshotServiceUrl
+    remoteScreenshotServiceUrl,
+    matchAgainstPath
   } = getConfig(options);
+  const currentRetryNumber = cy.state("test").currentRetry();
   return cy.then(() => cy.task(TASK.getScreenshotPathInfo, {
     titleFromOptions: options.title || Cypress.currentTest.titlePath.join(" "),
     imagesPath,
-    specPath: Cypress.spec.relative
+    specPath: Cypress.spec.relative,
+    currentRetryNumber
   }, {
     log: false
   })).then(({
@@ -132,7 +136,7 @@ Cypress.Commands.add("matchImage", {
   }).then(imgPath => cy.task(TASK.compareImages, {
     scaleFactor,
     imgNew: imgPath,
-    imgOld: imgPath.replace(FILE_SUFFIX.actual, ""),
+    imgOld: matchAgainstPath || imgPath.replace(FILE_SUFFIX.actual, ""),
     updateImages,
     maxDiffThreshold,
     diffConfig
@@ -169,6 +173,19 @@ Cypress.Commands.add("matchImage", {
       log.set("consoleProps", () => res);
       throw constructCypressError(log, new Error(res.message));
     }
+
+    return {
+      diffValue: res.imgDiff,
+      imgNewPath: imgPath,
+      imgPath: imgPath.replace(FILE_SUFFIX.actual, ""),
+      imgDiffPath: imgPath.replace(FILE_SUFFIX.actual, FILE_SUFFIX.diff),
+      imgNewBase64: res.imgNewBase64,
+      imgBase64: res.imgOldBase64,
+      imgDiffBase64: res.imgDiffBase64,
+      imgNew: typeof res.imgNewBase64 === "string" ? Cypress.Buffer.from(res.imgNewBase64, "base64") : undefined,
+      img: typeof res.imgOldBase64 === "string" ? Cypress.Buffer.from(res.imgOldBase64, "base64") : undefined,
+      imgDiff: typeof res.imgDiffBase64 === "string" ? Cypress.Buffer.from(res.imgDiffBase64, "base64") : undefined
+    };
   });
 });
 
