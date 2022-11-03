@@ -1,58 +1,30 @@
-# 1.0.0 (2022-10-31)
-
-
-### Bug Fixes
-
-* btoa utf8 encoding/decoding error ([#114](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/114)) ([0137014](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/01370148094f3152a374f4e612e75ef5fd2bc3d8))
-* create missing dirs when renaming screenshot files ([38e5ff5](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/38e5ff5d5f7c2a8d9b971deb13af821773815f66))
-* **deps:** pin dependency vue to 3.2.37 ([#68](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/68)) ([d09a762](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/d09a762bbcf0f6e9bb886f80e4d01724bf0e3367))
-* **deps:** update dependency @frsource/base64 to v1.0.3 ([#144](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/144)) ([09ecbd8](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/09ecbd81c9978161de2a782cf3bc735ce8d6ca3f))
-* **deps:** update dependency move-file to v3 ([#62](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/62)) ([4f6eaf6](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/4f6eaf64a0f3db6e54190ef7532059a451ad384f))
-* **deps:** update dependency pixelmatch to v5.3.0 ([#55](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/55)) ([ca5d278](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/ca5d2784a5fffb60bebe7643f8beced6ad9979bd))
-* **deps:** update dependency sharp to v0.31.1 ([#132](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/132)) ([15f0f5d](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/15f0f5d2824cba32d4611289442abd637d8438f5))
-* **deps:** update dependency vue to v3.2.38 ([#101](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/101)) ([e2d3c82](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/e2d3c823822ecb6738202599500435cf59f2f6d1))
-* **deps:** update dependency vue to v3.2.39 ([#110](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/110)) ([8a7f055](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/8a7f0555b1d664b83c7de64d93796408646704eb))
-* **deps:** update dependency vue to v3.2.40 ([#131](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/131)) ([537fd16](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/537fd16c4507c394998c0c7f0da7cff18e2d35c5))
-* image diff calculation ([529cb22](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/529cb22a22200af234bdbc1399b6f97880001d12)), closes [#107](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/107)
-* proper readme info ([dd87e19](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/dd87e19429fe232bd9027737ff7e218c52d8eb06))
-* remove alias leftovers from dist bundles ([407ce79](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/407ce79c6a6e00b509fd504f4cf615b3e3c504c3))
-* remove automated screenshots update ([acb3ef0](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/acb3ef08fb8ec5129bee9883431361dd804d23f3))
-* reset name cache after tests run ([bfbf138](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/bfbf138fa52de06072db32a0181821b56ca5230f))
-* sanitize screenshot filenames ([fc57380](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/fc57380d40e72eec51d5fdf2615226a358efa070))
-* security vulnerabilities ([d0bda44](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/d0bda44d3055cd578381406a06607bfba48ff447))
-* security vulnerability ([d6f849c](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/d6f849cb017e452d9f121866a6429d4bee4b5f18))
-* text overflowing when image is small ([3b04f8e](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/3b04f8e1782754c4c48e946ebdb2f43ccfec9461))
+# [3.1.0](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/compare/v3.0.4...v3.1.0) (2022-11-03)
 
 
 ### Features
 
-* add forceDeviceFactor option ([8d69632](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/8d6963222f924d73fc0aed08adecdb361104c2dc))
-* add matchAgainstPath option ([#146](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/146)) ([7a5e3a8](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/7a5e3a8ec5aa766e38ee372e11a6d1c155105126)), closes [#88](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/88)
-* add possibility to change images dirname ([b831e94](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/b831e94677df906f0cbd889f7ce0994e1e8a7783))
-* add queue flushing in after block ([70f828f](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/70f828ff68c4de276dd10c64ab61fece573d305f))
-* add title option to matchImage command ([#81](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/81)) ([4d03866](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/4d03866f7f171473b16b4a7c869fbca02d5f46d1))
-* add typings ([0a0e8e6](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/0a0e8e63ba1df0f95cf81ba6b0b34a095a0b69be))
-* auto clean unused files ([#124](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/124)) ([38679a7](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/38679a730edc4083b4bc751b19bc161bbb72d159)), closes [#118](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/118)
-* don't override screenshots if not needed ([9066017](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/90660179d05f4de1c803888fb66f8e1c240f7c37))
-* externalize important APIs ([9f94086](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/9f9408657e7970bdad5dfc7a599943a34a779ab7))
-* first implementation ([388cccf](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/388cccf5f033010e4de9f88294f5fca30c6d0cd1))
-* img diff when resolution differs ([#108](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/108)) ([c8a5044](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/c8a504480d09f6ffd34321163bf14b1a2f0e7bb0)), closes [#94](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/94)
-* introduce imagesPath option ([#152](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/152)) ([961e137](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/961e137099ba22aa9f0b6d36e6e73d495196a764)), closes [#147](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/147)
-* make library cypress 10 compatible ([b26beb3](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/b26beb391cf440d2d4b01261271b7acffa6f600e))
-* make plugin Cypress 10 compatible ([a03a17d](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/a03a17d7295dd811969c10ad562dda26795fd8f2))
-* migrate to @frsource/base64 package ([e4f3a14](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/e4f3a14575648b76d4f41eeb5984b853b968c974))
-* provide modern exports ([5c911a1](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/5c911a113624cea79e8b09eba2e643954a04a057))
-* show comparison for successful tests ([#137](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/137)) ([c09bab3](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/c09bab3ef805de24fc7cbcc8c738137c35e3fe18)), closes [#104](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/issues/104)
-* show scrollbar for overflowing images ([de994b9](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/de994b98ad3dea233aee70b0142992a309476e38))
-* stop logging all of the tasks ([573e728](https://github.com/braze-inc/cypress-plugin-visual-regression-diff/commit/573e7282799c802b0f6e9ecbe66501d043745ac3))
+* support Cypress retries functionality ([#171](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/171)) ([7d7d010](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/commit/7d7d010938ee124e694e8cf0270aa99c89db59df)), closes [#168](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/168)
+
+## [3.0.4](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/compare/v3.0.3...v3.0.4) (2022-11-03)
 
 
-### BREAKING CHANGES
+### Bug Fixes
 
-* deprecate imagesDir option in favor of imagesPath - see docs for additional information
-* To use autocleanup feature you need to update all of the screenshots, best do it by running your test suite with cypress env 'pluginVisualRegressionUpdateImages' set to true.
-* matchImage returns object containing comparison details from now on (previously was returning subject element from a chain)
-* different resolution doesn't fail test immediately - img diff is being done
+* typings for older typescript ([#170](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/170)) ([96499ec](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/commit/96499ecc2959bab8c39b599ba7eb87fbd79ceec3)), closes [#167](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/167)
+
+## [3.0.3](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/compare/v3.0.2...v3.0.3) (2022-11-01)
+
+
+### Bug Fixes
+
+* ts declaration generation ([1a1e0cc](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/commit/1a1e0ccd4c442d3e4d45f4d899139a08963e0c85))
+
+## [3.0.2](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/compare/v3.0.1...v3.0.2) (2022-10-27)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#165](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/165)) ([602640f](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/commit/602640fcca6e8173930efa116244258549aa5264))
 
 ## [3.0.1](https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/compare/v3.0.0...v3.0.1) (2022-10-26)
 
