@@ -34,7 +34,7 @@ const PATH_VARIABLES = {
 const WINDOWS_LIKE_DRIVE_REGEX = /^[A-Z]:$/;
 const METADATA_KEY = "FRSOURCE_CPVRD_V";
 
-var version = "3.0.1";
+var version = "3.1.0";
 
 function isHighSurrogate(codePoint) {
   return codePoint >= 0xd800 && codePoint <= 0xdbff;
@@ -143,7 +143,8 @@ const nameCacheCounter = {};
 const generateScreenshotPath = ({
   titleFromOptions,
   imagesPath,
-  specPath
+  specPath,
+  currentRetryNumber
 }) => {
   const parsePathPartVariables = (pathPart, i) => {
     if (pathPart === PATH_VARIABLES.specPath) {
@@ -163,6 +164,11 @@ const generateScreenshotPath = ({
 
   if (typeof nameCacheCounter[screenshotPath] === "undefined") {
     nameCacheCounter[screenshotPath] = -1;
+  } // it's a retry of the same image, so let's decrease the counter
+
+
+  if (currentRetryNumber > 0) {
+    --nameCacheCounter[screenshotPath];
   }
 
   return path.join(IMAGE_SNAPSHOT_PREFIX, `${screenshotPath} #${++nameCacheCounter[screenshotPath]}${FILE_SUFFIX.actual}.png`);
