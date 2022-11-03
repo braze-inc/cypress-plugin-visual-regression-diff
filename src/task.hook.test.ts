@@ -19,7 +19,7 @@ const fixturesPath = path.resolve(__dirname, "..", "__tests__", "fixtures");
 const oldImgFixture = "screenshot.png";
 const newImgFixture = "screenshot.actual.png";
 const newFileContent = "new file content";
-const attempt = 1;
+const currentRetryNumber = 1;
 
 const generateConfig = async (cfg: Partial<CompareImagesCfg>) => ({
   updateImages: false,
@@ -49,7 +49,7 @@ describe("getScreenshotPathInfoTask", () => {
         titleFromOptions: "some-title-withśpęćiał人物",
         imagesPath: "nested/images/dir",
         specPath,
-        attempt,
+        currentRetryNumber,
       })
     ).toEqual({
       screenshotPath:
@@ -64,7 +64,7 @@ describe("getScreenshotPathInfoTask", () => {
         titleFromOptions: "some-title",
         imagesPath: "{spec_path}/images/dir",
         specPath,
-        attempt,
+        currentRetryNumber,
       })
     ).toEqual({
       screenshotPath:
@@ -79,7 +79,7 @@ describe("getScreenshotPathInfoTask", () => {
         titleFromOptions: "some-title",
         imagesPath: "/images/dir",
         specPath,
-        attempt,
+        currentRetryNumber,
       })
     ).toEqual({
       screenshotPath:
@@ -92,7 +92,7 @@ describe("getScreenshotPathInfoTask", () => {
         titleFromOptions: "some-title",
         imagesPath: "C:/images/dir",
         specPath,
-        attempt,
+        currentRetryNumber,
       })
     ).toEqual({
       screenshotPath:
@@ -109,7 +109,7 @@ describe("cleanupImagesTask", () => {
         titleFromOptions: "some-file",
         imagesPath: "images",
         specPath: "some/spec/path",
-        attempt,
+        currentRetryNumber,
       });
       return path.join(
         projectRoot,
