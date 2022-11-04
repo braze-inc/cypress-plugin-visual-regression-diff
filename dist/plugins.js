@@ -43,7 +43,7 @@ const PATH_VARIABLES = {
 const WINDOWS_LIKE_DRIVE_REGEX = /^[A-Z]:$/;
 const METADATA_KEY = "FRSOURCE_CPVRD_V";
 
-var version = "3.1.0";
+var version = "3.1.1";
 
 function isHighSurrogate(codePoint) {
   return codePoint >= 0xd800 && codePoint <= 0xdbff;
@@ -149,6 +149,13 @@ var sanitizeFilename = function (input, options) {
 };
 
 const nameCacheCounter = {};
+const lastRetryNameCacheCounter = {};
+let lastRetryNumber = 0;
+
+const resetMap = map => {
+  for (const key in map) delete map[key];
+};
+
 const generateScreenshotPath = ({
   titleFromOptions,
   imagesPath,
@@ -173,14 +180,18 @@ const generateScreenshotPath = ({
 
   if (typeof nameCacheCounter[screenshotPath] === "undefined") {
     nameCacheCounter[screenshotPath] = -1;
-  } // it's a retry of the same image, so let's decrease the counter
+  } // it's a retry of last test, so let's reset the counter to value before last retry
 
 
-  if (currentRetryNumber > 0) {
-    --nameCacheCounter[screenshotPath];
+  if (currentRetryNumber > lastRetryNumber) {
+    // +1 because we index screenshots starting at 0
+    for (const screenshotPath in lastRetryNameCacheCounter) nameCacheCounter[screenshotPath] -= lastRetryNameCacheCounter[screenshotPath] + 1;
   }
 
-  return path__default["default"].join(IMAGE_SNAPSHOT_PREFIX, `${screenshotPath} #${++nameCacheCounter[screenshotPath]}${FILE_SUFFIX.actual}.png`);
+  resetMap(lastRetryNameCacheCounter);
+  lastRetryNumber = currentRetryNumber;
+  lastRetryNameCacheCounter[screenshotPath] = ++nameCacheCounter[screenshotPath];
+  return path__default["default"].join(IMAGE_SNAPSHOT_PREFIX, `${screenshotPath} #${nameCacheCounter[screenshotPath]}${FILE_SUFFIX.actual}.png`);
 };
 const screenshotPathRegex = new RegExp(`^([\\s\\S]+?) #([0-9]+)(?:(?:\\${FILE_SUFFIX.diff})|(?:\\${FILE_SUFFIX.actual}))?\\.(?:png|PNG)$`);
 const wasScreenshotUsed = imagePath => {
@@ -196,7 +207,9 @@ const wasScreenshotUsed = imagePath => {
   return screenshotPath in nameCacheCounter && num <= nameCacheCounter[screenshotPath];
 };
 const resetScreenshotNameCache = () => {
-  Object.keys(nameCacheCounter).forEach(k => delete nameCacheCounter[k]);
+  lastRetryNumber = 0;
+  resetMap(nameCacheCounter);
+  resetMap(lastRetryNameCacheCounter);
 };
 
 const addPNGMetadata = png => metaPng.addMetadata(png, METADATA_KEY, version
